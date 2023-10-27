@@ -8,9 +8,10 @@ contract Denzicle721 is ERC721EnumerableUpgradeable, OwnableUpgradeable {
   bool public mintable = false;
 
   string public baseURI;
-  uint256 public maxSupply;
-  uint256 public maxCount;
-  uint256 public price;
+  uint256 public maxSupply;         // Total number of Denzicles
+  uint256 public maxCount;          // Total number of Denzicles and Denzerms
+  uint256 public denzermCount = 0;  // The Denzerm count currently
+  uint256 public price;             // The price to mint a Denzicle
 
   mapping(address => uint256) public balanceDenzicle;
   mapping(uint256 => address) public owners;
@@ -36,7 +37,7 @@ contract Denzicle721 is ERC721EnumerableUpgradeable, OwnableUpgradeable {
   function mint(uint256 numberOfMints) public payable {
     uint256 supply = totalSupply();
     require(mintable, "Cannot mint new Denzicles currently!");
-    require(numberOfMints > 0, "Number of mints must be non-zero!");
+    require(numberOfMints > 0 && numberOfMints <= 3, "Number of mints must be between 1 and 3!");
     require(supply + numberOfMints <= maxSupply, "Number of mints exceed max supply!");
     require(price * numberOfMints == msg.value, "Incorrect payment amount!");
 
@@ -77,18 +78,18 @@ contract Denzicle721 is ERC721EnumerableUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * Updates the currently used URI
-   * @param newURI the new URI address
-   */
-  function setBaseURI(string memory newURI) public onlyOwner {
-    baseURI = newURI;
-  }
-
-  /**
    * Updates the base price of Denzicles
    * @param newPrice the price to be updated to
    */
   function setPrice(uint256 newPrice) public onlyOwner {
     price = newPrice;
+  }
+
+  /**
+   * Updates the currently used URI
+   * @param newURI the new URI address
+   */
+  function setBaseURI(string memory newURI) public onlyOwner {
+    baseURI = newURI;
   }
 }
