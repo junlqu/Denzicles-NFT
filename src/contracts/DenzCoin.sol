@@ -27,4 +27,6 @@ contract DenzCoin is Initializable, ERC20Upgradeable, OwnableUpgradeable {
     denzicle = Denz(denzicleAddress);
     START = block.timestamp;
   }
+
+  
 }
