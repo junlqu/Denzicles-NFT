@@ -16,11 +16,9 @@ contract DenzCoin is Initializable, ERC20Upgradeable, OwnableUpgradeable {
   string private constant _symbol = "DzCn";
 
   uint256 public constant BASE_RATE = 10 ether;
+  uint256 public raffleReward;
   uint256 public START;
   bool claimable = true;
-
-  uint256 public constant COOLDOWN = 86400 seconds; // 1 day
-  uint256 public raffleReward = 500 ether;
 
   mapping(address => uint256) public claimableCoins;
   mapping(address => uint256) public lastClaimed;
@@ -34,6 +32,7 @@ contract DenzCoin is Initializable, ERC20Upgradeable, OwnableUpgradeable {
     __ERC20_init_unchained(_name, _symbol);
     denzicle = Denz(denzicleAddress);
     START = block.timestamp;
+    raffleReward = 500 ether;
   }
 
   /**
@@ -44,6 +43,16 @@ contract DenzCoin is Initializable, ERC20Upgradeable, OwnableUpgradeable {
   function burn(address _from, uint256 _amount) external {
     require(msg.sender == address(denzicle) || adminAddresses[msg.sender], "Address does not have permission to burn!");
     _burn(_from, _amount);
+  }
+
+  /**
+   * Claims the current claimable amount of DenzCoins
+   */
+  function claim() external {
+    require(claimable, "Rewards are currently unclaimable!");
+    _mint(msg.sender, claimableCoins[msg.sender] + getClaimable(msg.sender));
+    claimableCoins[msg.sender] = 0;
+    lastClaimed[msg.sender] = block.timestamp;
   }
 
   /**
@@ -70,5 +79,23 @@ contract DenzCoin is Initializable, ERC20Upgradeable, OwnableUpgradeable {
    */
   function getClaimable(address user) internal view returns(uint256) {
     return denzicle.balanceDenzicle(user) * BASE_RATE * (block.timestamp - (lastClaimed[user] >= START ? lastClaimed[user] : START)) / 86400;
+  }
+
+  /**
+   * Sends out a set amount of DenzCoins to a list of recipients
+   * @param recipients the list of recipients
+   */
+  function sendRaffle(address[] memory recipients) external onlyOwner {
+    for (uint256 i; i < recipients.length; i++) {
+      _mint(recipients[i], raffleReward);
+    }
+  }
+
+  /**
+   * Updates the raffle reward
+   * @param newPrize the new raffle reward
+   */
+  function setRafflePrice(uint256 newPrize) public onlyOwner{
+    raffleReward = newPrize;
   }
 }
