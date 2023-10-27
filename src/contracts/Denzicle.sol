@@ -46,6 +46,6 @@ contract Denzicle is Initializable, Denzicle721 {
     __Ownable_init_unchained(msg.sender);
     maxSupply = _maxSupply;
     price = _price;
-    baseURI = uri;
+    baseURI = _uri;
   }
 }
