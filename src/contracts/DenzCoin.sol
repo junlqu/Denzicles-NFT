@@ -92,10 +92,17 @@ contract DenzCoin is Initializable, ERC20Upgradeable, OwnableUpgradeable {
   }
 
   /**
+   * Toggles whether users can claim DenzCoins
+   */
+  function toggleClaimable() public onlyOwner {
+    claimable = !claimable;
+  }
+
+  /**
    * Updates the raffle reward
    * @param newPrize the new raffle reward
    */
-  function setRafflePrice(uint256 newPrize) public onlyOwner{
+  function setRafflePrice(uint256 newPrize) public onlyOwner {
     raffleReward = newPrize;
   }
 }
