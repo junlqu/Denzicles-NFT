@@ -14,7 +14,7 @@ contract Denzicle721 is ERC721EnumerableUpgradeable, OwnableUpgradeable {
   uint256 public price;             // The price to mint a Denzicle
 
   mapping(address => uint256) public balanceDenzicle;
-  mapping(uint256 => address) public owners;
+  mapping(uint256 => address) public denzicleOwners;
 
   /**
    * Mints a collection of denzicles to a list of recipients, one to one
@@ -60,6 +60,33 @@ contract Denzicle721 is ERC721EnumerableUpgradeable, OwnableUpgradeable {
     }
 
     return tokens;
+  }
+
+  /**
+   * Returns the list of all Denzicle owners
+   */
+  function ownersOfTokens() external view returns (address[] memory) {
+    uint256 tokenCount = totalSupply();
+    address[] memory owners = new address[](tokenCount);
+
+    for (uint256 i; i < tokenCount; i++) {
+      owners[i] = ownerOf(i);
+    }
+
+    return owners;
+  }
+
+  /**
+   * Returns the list of all Denzerm owners
+   */
+  function ownersOfDenzerms() external view returns (address[] memory) {
+    address[] memory owners = new address[](denzermCount);
+
+    for (uint256 i; i < denzermCount; i++) {
+      owners[i] = ownerOf(i);
+    }
+
+    return owners;
   }
 
   /**
