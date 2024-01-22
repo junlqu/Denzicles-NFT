@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://ibdrebw1news"]
+
+[ext_resource type="Script" path="res://player/Player.gd" id="1_l756h"]
+[ext_resource type="Script" path="res://camera/Camera.gd" id="2_iqw23"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_hohpp"]
+size = Vector2(16, 16)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8pcvm"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_v06nr"]
+
+[node name="Game" type="Node"]
+
+[node name="Map" type="Node3D" parent="."]
+
+[node name="Ground" type="MeshInstance3D" parent="Map"]
+transform = Transform3D(1.74317, 0, 0, 0, -7.61965e-08, 1.74317, 0, -1.74317, -7.61965e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_hohpp")
+
+[node name="Light" type="OmniLight3D" parent="Map"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.453684, 3.61155, -0.517971)
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 7, 0)
+fov = 90.0
+near = 0.5
+script = ExtResource("2_iqw23")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.996956, 1.02445, 1.30282)
+script = ExtResource("1_l756h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("SphereShape3D_8pcvm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+mesh = SubResource("CylinderMesh_v06nr")
